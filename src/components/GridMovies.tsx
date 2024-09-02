@@ -36,7 +36,7 @@ function GridMovies({ selectedCategories = ["Action"] }: GridMoviesProps) {
   const requestOptions: RequestInit = {
     method: "GET",
     headers: myHeaders,
-    redirect: "follow", // This is the correct type for redirect
+    redirect: "follow",
   };
 
   const apiEndpoint =
