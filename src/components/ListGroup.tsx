@@ -3,29 +3,36 @@ import { useState } from "react";
 interface Props {
   category: string[];
   heading: string;
-  onSelectedItem: (item: string) => void;
+  onSelectedItems: (items: string[]) => void;
 }
 
-function ListGroups({ category, heading, onSelectedItem }: Props) {
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+function ListGroups({ category, heading, onSelectedItems }: Props) {
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  const handleItemClick = (item: string) => {
+    const updatedItems = selectedItems.includes(item)
+      ? selectedItems.filter((i) => i !== item)
+      : [...selectedItems, item];
+
+    setSelectedItems(updatedItems);
+    onSelectedItems(updatedItems);
+  };
 
   return (
     <>
-      <div className="col ">
+      <div className="container bg-primary ">
         <h1>{heading}</h1>
+
         {category.length === 0 && <p>No category found</p>}
-        <ul className="list-group">
+        <ul className="list-group  ">
           {category.map((item, index) => (
             <li
-              onClick={() => {
-                setSelectedIndex(index);
-                onSelectedItem(item);
-              }}
+              onClick={() => handleItemClick(item)}
               key={index}
               className={
-                selectedIndex === index
-                  ? "list-group-item active "
-                  : "list-group-item"
+                selectedItems.includes(item)
+                  ? "list-group-item active"
+                  : "list-group-item  "
               }
             >
               {item}

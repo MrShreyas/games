@@ -1,25 +1,25 @@
 import { useEffect, useState } from "react";
 
 interface Movie {
-  // Add type definitions for the movie object
-
-  date: "";
-  list: [
-    {
-      categories: [];
-      image: "";
-      link: "";
-      staring: [];
-      title: "";
-    }
-  ];
+  date: string;
+  list: {
+    categories: string[];
+    image: string;
+    link: string;
+    staring: string[];
+    title: string;
+  }[];
 }
 
 interface MoviesResponse {
   movies: Movie[];
 }
 
-function GridMovies() {
+interface GridMoviesProps {
+  selectedCategories: string[];
+}
+
+function GridMovies({ selectedCategories = ["Action"] }: GridMoviesProps) {
   const [movies, setMovies] = useState<MoviesResponse>({
     movies: [],
   });
@@ -41,6 +41,7 @@ function GridMovies() {
 
   const apiEndpoint =
     "https://Movies-Verse.proxy-production.allthingsdev.co/api/movies/upcoming-movies";
+
   useEffect(() => {
     const loadMovies = async () => {
       try {
@@ -57,22 +58,32 @@ function GridMovies() {
     loadMovies();
   }, []);
 
+  const filteredMovies = movies.movies.filter((movie) =>
+    movie.list.some((item) =>
+      selectedCategories.length === 0
+        ? true
+        : selectedCategories.every((category) =>
+            item.categories.includes(category)
+          )
+    )
+  );
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
     <>
-      <div className="row row-cols row-cols-md-4 g-4">
-        {movies.movies.map((movie, index) => (
-          <div key={index} className="col">
-            {movie.list.map((item, index1) => (
-              <div key={index1} className="card">
+      <div className="row row-cols-4 row-cols-md-4 g-4 ">
+        {filteredMovies.map((movie) =>
+          movie.list.map((item, index1) => (
+            <div key={index1} className="col">
+              <div className="card">
                 <img src={item.image} className="card-img-top" alt="..." />
                 <div className="card-body">
                   <h5 className="card-title">{item.title}</h5>
                   <h6 className="card-subtitle mb-2 text-body-secondary">
-                    Starring :
+                    Starring:
                     {item.staring.map((starring, index2) => (
                       <p key={index2} className="mb-0">
                         {starring}
@@ -84,12 +95,15 @@ function GridMovies() {
                       {category}
                     </span>
                   ))}
-                  <p className="card-text">Release Date : {movie.date}</p>
+                  <p className="card-text">Release Date: {movie.date}</p>
+                  <a className="text-decoration-none " href={item.link}>
+                    Know More
+                  </a>
                 </div>
               </div>
-            ))}
-          </div>
-        ))}
+            </div>
+          ))
+        )}
       </div>
     </>
   );

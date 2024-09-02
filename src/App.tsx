@@ -2,18 +2,19 @@ import "bootstrap/dist/css/bootstrap.css";
 
 import ListGroups from "./components/ListGroup";
 import GridMovies from "./components/GridMovies";
+import { useState } from "react";
 
 function App() {
   const category = [
     "Comedy",
-    "Fantacy",
+    "Fantasy",
     "Adventure",
     "Thriller",
     "Animation",
     "Family",
     "Horror",
     "Drama",
-    "Documentory",
+    "Documentary",
     "Crime",
     "Mystery",
     "Action",
@@ -23,8 +24,10 @@ function App() {
     "Biography",
   ];
 
-  const handleSelectedItem = (item: string) => {
-    console.log(item);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+  const handleSelectedItems = (items: string[]) => {
+    setSelectedCategories(items);
   };
 
   return (
@@ -33,9 +36,9 @@ function App() {
         <ListGroups
           category={category}
           heading="Categories"
-          onSelectedItem={handleSelectedItem}
+          onSelectedItems={handleSelectedItems}
         />
-        <GridMovies />
+        <GridMovies selectedCategories={selectedCategories} />
       </div>
     </>
   );
