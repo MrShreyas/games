@@ -69,7 +69,7 @@ function GridMovies({ selectedCategories = ["Action"] }: GridMoviesProps) {
   );
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="vw-100">Loading...</div>;
   }
 
   return (
