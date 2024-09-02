@@ -2,6 +2,17 @@ import { useEffect, useState } from "react";
 
 interface Movie {
   // Add type definitions for the movie object
+
+  date: "";
+  list: [
+    {
+      categories: [];
+      image: "";
+      link: "";
+      staring: [];
+      title: "";
+    }
+  ];
 }
 
 interface MoviesResponse {
@@ -9,7 +20,9 @@ interface MoviesResponse {
 }
 
 function GridMovies() {
-  const [movies, setMovies] = useState<MoviesResponse>({ movies: [] });
+  const [movies, setMovies] = useState<MoviesResponse>({
+    movies: [],
+  });
   const [loading, setLoading] = useState(false);
 
   const myHeaders = new Headers();
@@ -34,9 +47,7 @@ function GridMovies() {
         setLoading(true);
         const response = await fetch(apiEndpoint, requestOptions);
         const result: MoviesResponse = await response.json();
-        console.log(result);
         setMovies(result);
-        console.log("Movies", movies);
       } catch (error) {
         console.log(error);
       } finally {
@@ -51,11 +62,36 @@ function GridMovies() {
   }
 
   return (
-    <div>
-      {movies.movies.map((movie, index) => (
-        <div key={index}>{movie.title}</div>
-      ))}
-    </div>
+    <>
+      <div className="row row-cols row-cols-md-4 g-4">
+        {movies.movies.map((movie, index) => (
+          <div key={index} className="col">
+            {movie.list.map((item, index1) => (
+              <div key={index1} className="card">
+                <img src={item.image} className="card-img-top" alt="..." />
+                <div className="card-body">
+                  <h5 className="card-title">{item.title}</h5>
+                  <h6 className="card-subtitle mb-2 text-body-secondary">
+                    Starring :
+                    {item.staring.map((starring, index2) => (
+                      <p key={index2} className="mb-0">
+                        {starring}
+                      </p>
+                    ))}
+                  </h6>
+                  {item.categories.map((category, index3) => (
+                    <span key={index3} className="mx-1 badge text-bg-secondary">
+                      {category}
+                    </span>
+                  ))}
+                  <p className="card-text">Release Date : {movie.date}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
