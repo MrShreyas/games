@@ -33,10 +33,10 @@ function GridMovies({ selectedCategories = ["Action"] }: GridMoviesProps) {
   myHeaders.append("x-apihub-host", "Movies-Verse.allthingsdev.co");
   myHeaders.append("x-apihub-endpoint", "4f700f4a-4bd2-4604-8d5b-7b5e4c976c65");
 
-  const requestOptions = {
+  const requestOptions: RequestInit = {
     method: "GET",
     headers: myHeaders,
-    redirect: "follow",
+    redirect: "follow", // This is the correct type for redirect
   };
 
   const apiEndpoint =
